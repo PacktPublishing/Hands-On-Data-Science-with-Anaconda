@@ -1,0 +1,7 @@
+conda help
+conda info
+conda update –n base conda
+conda search matplotlib
+conda install matploblit
+conda update  matploblit
+conda remove matploblit

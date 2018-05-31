@@ -1,0 +1,5 @@
+https://github.com/scipy/scipy/blob/master/scipy/cluster/vq.py
+
+http://scikit-learn.org/stable/auto_examples/cluster/plot_digits_linkage.html#sphx-glr-auto-examples-cluster-plot-digits-linkage-py
+
+http://scikit-learn.org/stable/auto_examples/decomposition/plot_pca_iris.html

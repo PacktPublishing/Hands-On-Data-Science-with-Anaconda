@@ -1,0 +1,27 @@
+library(timeSeries)
+path<-'http://canisius.edu/~yany/RData/'
+dataSet<-'sp500monthly.RData'
+link<-paste(path,dataSet,sep='')
+load(url(link))
+p<-.sp500monthly$ADJ.CLOSE
+n<-length(p)
+logRet<-log(p[2:n]/p[1:(n-1)])
+
+x<-data.frame(logRet,row.names=.sp500monthly$DATE[2:n])
+by <- timeSequence(from = rownames(x)[1],  to = rownames(x)[n-1], by = "year")
+y<-aggregate(x,by,sum)
+
+
+
+library(plyr)
+df <- data.frame(DATE = c("1", "1", "2", "3", "3"), B = c(2, 3, 3, 5, 6))
+dfsum <- ddply(df, c("DATE"), summarize, B = sum(B))
+
+
+
+
+ xx <- MSFT
+ byx <- timeSequence(from = start(xx),  to = end(xx), by = "week")
+ yy<-aggregate(xx,byx,mean)
+
+

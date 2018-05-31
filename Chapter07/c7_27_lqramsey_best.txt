@@ -1,0 +1,1381 @@
+Jupyter Notebook <http://localhost:8888/tree>
+Logout Untitled21-Copy1 Last Checkpoint: 30 minutes ago (autosaved)
+[Python 3]
+// Menu
+
+Python 3 //
+
+/
+/
+
+/
+/
+
+/ /
+/
+
+/
+Trusted
+
+  * File <#>
+      o New Notebook <#>
+          + Python 3 <#>
+          +
+          + Julia 0.6.1 <#>
+          + Octave <#>
+          + R <#>
+      o Open... <#>
+      o
+      o Make a Copy... <#>
+      o Rename... <#>
+      o Save and Checkpoint <#>
+      o
+      o Revert to Checkpoint <#>
+          + Friday, March 30, 2018 11:27 AM <#>
+      o
+      o Print Preview <#>
+      o Download as <#>
+          + Notebook (.ipynb) <#>
+          + Python (.py) <#>
+          + HTML (.html) <#>
+          + Markdown (.md) <#>
+          + reST (.rst) <#>
+          + LaTeX (.tex) <#>
+          + PDF via LaTeX (.pdf) <#>
+      o Deploy as <#>
+      o
+      o Trusted Notebook <#>
+      o
+      o Close and Halt <#>
+  * Edit <#>
+      o Cut Cells <#>
+      o Copy Cells <#>
+      o Paste Cells Above <#>
+      o Paste Cells Below <#>
+      o Paste Cells & Replace <#>
+      o Delete Cells <#>
+      o Undo Delete Cells <#>
+      o
+      o Split Cell <#>
+      o Merge Cell Above <#>
+      o Merge Cell Below <#>
+      o
+      o Move Cell Up <#>
+      o Move Cell Down <#>
+      o
+      o Edit Notebook Metadata <#>
+      o
+      o Find and Replace <#>
+      o
+      o Cut Cell Attachments <#>
+      o Copy Cell Attachments <#>
+      o Paste Cell Attachments <#>
+      o
+      o Insert Image <#>
+  * View <#>
+      o Toggle Header <#>
+      o Toggle Toolbar <#>
+      o Toggle Line Numbers <#>
+      o Cell Toolbar <#>
+          + None <#>
+          + Edit Metadata <#>
+          + Raw Cell Format <#>
+          + Slideshow <#>
+          + Attachments <#>
+          + Tags <#>
+  * Insert <#>
+      o Insert Cell Above <#>
+      o Insert Cell Below <#>
+  * Cell <#>
+      o Run Cells <#>
+      o Run Cells and Select Below <#>
+      o Run Cells and Insert Below <#>
+      o Run All <#>
+      o Run All Above <#>
+      o Run All Below <#>
+      o
+      o Cell Type <#>
+          + Code <#>
+          + Markdown <#>
+          + Raw NBConvert <#>
+      o
+      o Current Outputs <#>
+          + Toggle <#>
+          + Toggle Scrolling <#>
+          + Clear <#>
+      o All Output <#>
+          + Toggle <#>
+          + Toggle Scrolling <#>
+          + Clear <#>
+  * Kernel <#>
+      o Interrupt <#>
+      o Restart <#>
+      o Restart & Clear Output <#>
+      o Restart & Run All <#>
+      o Reconnect <#>
+      o Shutdown <#>
+      o
+      o Change kernel <#>
+          + Julia 0.6.1 <#>
+          + Octave <#>
+          + Python 3 <#>
+          + R <#>
+  * Widgets <#>
+      o Save Notebook Widget State <#>
+      o Clear Notebook Widget State <#>
+      o Download Widget State <#>
+      o Embed Widgets <#>
+  * Help <#>
+      o User Interface Tour <#>
+      o Keyboard Shortcuts <#>
+      o Edit Keyboard Shortcuts <#>
+      o
+      o
+        /
+
+        / Notebook Help
+        <http://nbviewer.ipython.org/github/ipython/ipython/blob/3.x/examples/Notebook/Index.ipynb>
+      o
+        /
+
+        / Markdown <https://help.github.com/articles/markdown-basics/>
+      o
+      o
+        /
+
+        /Python <http://docs.python.org/3.6?v=20180330115143>
+      o
+        /
+
+        /IPython <http://ipython.org/documentation.html?v=20180330115143>
+      o
+        /
+
+        /NumPy <http://docs.scipy.org/doc/numpy/reference/?v=20180330115143>
+      o
+        /
+
+        /SciPy <http://docs.scipy.org/doc/scipy/reference/?v=20180330115143>
+      o
+        /
+
+        /Matplotlib <http://matplotlib.org/contents.html?v=20180330115143>
+      o
+        /
+
+        /SymPy <http://docs.sympy.org/latest/index.html?v=20180330115143>
+      o
+        /
+
+        /pandas
+        <http://pandas.pydata.org/pandas-docs/stable/?v=20180330115143>
+      o
+      o About <#>
+
+//
+
+//
+
+//
+
+//
+
+//
+
+//
+
+//
+
+//
+
+//
+
+//
+
+//
+
+In [1]:
+295
+ 
+1
+
+import sys
+
+2
+
+import numpy as np
+
+3
+
+from numpy import sqrt, eye, dot, zeros, cumsum
+
+4
+
+from numpy.random import randn
+
+5
+
+import scipy.linalg
+
+6
+
+import matplotlib.pyplot as plt
+
+7
+
+from collections import namedtuple
+
+8
+
+from quantecon import nullspace, mc_sample_path, var_quadratic_sum
+
+9
+
+# == Set up a namedtuple to store data on the model economy == #
+
+10
+
+Economy = namedtuple('economy',
+
+11
+
+        ( 'beta',          # Discount factor
+
+12
+
+          'Sg',         # Govt spending selector matrix
+
+13
+
+          'Sd',         # Exogenous endowment selector matrix
+
+14
+
+          'Sb',         # Utility parameter selector matrix
+
+15
+
+          'Ss',         # Coupon payments selector matrix
+
+16
+
+          'discrete',   # Discrete or continuous -- boolean
+
+17
+
+          'proc'))      # Stochastic process parameters
+
+18
+
+​
+
+19
+
+# == Set up a namedtuple to store return values for compute_paths() == #
+
+20
+
+Path = namedtuple('path',
+
+21
+
+       ('g',            # Govt spending
+
+22
+
+        'd',            # Endowment
+
+23
+
+        'b',            # Utility shift parameter
+
+24
+
+        's',            # Coupon payment on existing debt
+
+25
+
+        'c',            # Consumption
+
+26
+
+        'l',            # Labor
+
+27
+
+        'p',            # Price
+
+28
+
+        'Tax',            # Tax rate
+
+29
+
+        'rvn',          # Revenue
+
+30
+
+        'B',            # Govt debt
+
+31
+
+        'R',            # Risk free gross return
+
+32
+
+        'Rf1',            # One-period risk-free interest rate
+
+33
+
+        'Radj',            # Cumulative rate of return, adjusted
+
+34
+
+        'adj'))           # Adjustment factor for Radj
+
+35
+
+​
+
+36
+
+​
+
+37
+
+def compute_paths(T, econ):
+
+38
+
+    """
+
+39
+
+    Compute simulated time paths for exogenous and endogenous variables.
+
+40
+
+​
+
+41
+
+    Parameters
+
+42
+
+    ===========
+
+43
+
+    T: int
+
+44
+
+        Length of the simulation
+
+45
+
+​
+
+46
+
+    econ: a namedtuple of type 'Economy', containing
+
+47
+
+         beta          - Discount factor
+
+48
+
+         Sg         - Govt spending selector matrix
+
+49
+
+         Sd         - Exogenous endowment selector matrix
+
+50
+
+         Sb         - Utility parameter selector matrix
+
+51
+
+         Ss         - Coupon payments selector matrix
+
+52
+
+         discrete   - Discrete exogenous process (True or False)
+
+53
+
+         proc       - Stochastic process parameters
+
+54
+
+​
+
+55
+
+    Returns
+
+56
+
+    ========
+
+57
+
+    path: a namedtuple of type 'Path', containing
+
+58
+
+         g            - Govt spending
+
+59
+
+         d            - Endowment
+
+60
+
+         b            - Utility shift parameter
+
+61
+
+         s            - Coupon payment on existing debt
+
+62
+
+         c            - Consumption
+
+63
+
+         l            - Labor
+
+64
+
+         p            - Price
+
+65
+
+         T            - Tax rate
+
+66
+
+         rvn          - Revenue
+
+67
+
+         B            - Govt debt
+
+68
+
+         R            - Risk free gross return
+
+69
+
+         Rf1            - One-period risk-free interest rate
+
+70
+
+         Radj            - Cumulative rate of return, adjusted
+
+71
+
+         adj            - Adjustment factor for Radj
+
+72
+
+​
+
+73
+
+        The corresponding values are flat numpy ndarrays.
+
+74
+
+​
+
+75
+
+    """
+
+76
+
+​
+
+77
+
+    # == Simplify names == #
+
+78
+
+    beta, Sg, Sd, Sb, Ss = econ.beta, econ.Sg, econ.Sd, econ.Sb, econ.Ss
+
+79
+
+​
+
+80
+
+    if econ.discrete:
+
+81
+
+        P, x_vals = econ.proc
+
+82
+
+    else:
+
+83
+
+        A, C = econ.proc
+
+84
+
+​
+
+85
+
+    # == Simulate the exogenous process x == #
+
+86
+
+    if econ.discrete:
+
+87
+
+        state = mc_sample_path(P, init=0, sample_size=T)
+
+88
+
+        x = x_vals[:, state]
+
+89
+
+    else:
+
+90
+
+        # == Generate an initial condition x0 satisfying x0 = A x0 == #
+
+91
+
+        nx, nx = A.shape
+
+92
+
+        x0 = nullspace((eye(nx) - A))
+
+93
+
+        x0 = -x0 if (x0[nx-1] < 0) else x0
+
+94
+
+        x0 = x0 / x0[nx-1]
+
+95
+
+​
+
+96
+
+        # == Generate a time series x of length T starting from x0 == #
+
+97
+
+        nx, nw = C.shape
+
+98
+
+        x = zeros((nx, T))
+
+99
+
+        w = randn(nw, T)
+
+100
+
+        x[:, 0] = x0.T
+
+101
+
+        for t in range(1, T):
+
+102
+
+            x[:, t] = dot(A, x[:, t-1]) + dot(C, w[:, t])
+
+103
+
+​
+
+104
+
+    # == Compute exogenous variable sequences == #
+
+105
+
+    g, d, b, s = (dot(S, x).flatten() for S in (Sg, Sd, Sb, Ss))
+
+106
+
+​
+
+107
+
+    # == Solve for Lagrange multiplier in the govt budget constraint == #
+
+108
+
+    # In fact we solve for xx = lambda / (1 + 2*lambda).  Here xx is the
+
+109
+
+    # solution to a quadratic equation a(xx**2 - xx) + b = 0 where
+
+110
+
+    # a and b are expected discounted sums of quadratic forms of the state.
+
+111
+
+    Sm = Sb - Sd - Ss
+
+112
+
+    # == Compute a and b == #
+
+113
+
+    if econ.discrete:
+
+114
+
+        ns = P.shape[0]
+
+115
+
+        F = scipy.linalg.inv(np.identity(ns) - beta * P)
+
+116
+
+        a0 = 0.5 * dot(F, dot(Sm, x_vals).T**2)[0]
+
+117
+
+        H = dot(Sb - Sd + Sg, x_vals) * dot(Sg - Ss, x_vals)
+
+118
+
+        b0 = 0.5 * dot(F, H.T)[0]
+
+119
+
+        a0, b0 = float(a0), float(b0)
+
+120
+
+    else:
+
+121
+
+        H = dot(Sm.T, Sm)
+
+122
+
+        a0 = 0.5 * var_quadratic_sum(A, C, H, beta, x0)
+
+123
+
+        H = dot((Sb - Sd + Sg).T, (Sg + Ss))
+
+124
+
+        b0 = 0.5 * var_quadratic_sum(A, C, H, beta, x0)
+
+125
+
+​
+
+126
+
+    # == Test that xx has a real solution before assigning == #
+
+127
+
+    warning_msg = """
+
+128
+
+    Hint: you probably set government spending too {}.  Elect a {}
+
+129
+
+    Congress and start over.
+
+130
+
+    """
+
+131
+
+    disc = a0**2 - 4 * a0 * b0
+
+132
+
+    if disc >= 0:
+
+133
+
+        xx = 0.5 * (a0 - sqrt(disc)) / a0
+
+134
+
+    else:
+
+135
+
+        print("There is no Ramsey equilibrium for these parameters.")
+
+136
+
+        print(warning_msg.format('high', 'Republican'))
+
+137
+
+        sys.exit(0)
+
+138
+
+​
+
+139
+
+    # == Test that the Lagrange multiplier has the right sign == #
+
+140
+
+    if xx * (0.5 - xx) < 0:
+
+141
+
+        print("Negative multiplier on the government budget constraint.")
+
+142
+
+        print(warning_msg.format('low', 'Democratic'))
+
+143
+
+        sys.exit(0)
+
+144
+
+​
+
+145
+
+    # == Solve for the allocation given xx and x == #
+
+146
+
+    Sc = 0.5 * (Sb + Sd - Sg - xx * Sm)
+
+147
+
+    Sl = 0.5 * (Sb - Sd + Sg - xx * Sm)
+
+148
+
+    c = dot(Sc, x).flatten()
+
+149
+
+    l = dot(Sl, x).flatten()
+
+150
+
+    p = dot(Sb - Sc, x).flatten()  # Price without normalization
+
+151
+
+    Tax = 1 - l / (b - c)
+
+152
+
+    rvn = l * Tax
+
+153
+
+​
+
+154
+
+    # == Compute remaining variables == #
+
+155
+
+    if econ.discrete:
+
+156
+
+        H = dot(Sb - Sc, x_vals) * dot(Sl - Sg, x_vals) - dot(Sl, x_vals)**2
+
+157
+
+        temp = dot(F, H.T).flatten()
+
+158
+
+        B = temp[state] / p
+
+159
+
+        H = dot(P[state, :], dot(Sb - Sc, x_vals).T).flatten()
+
+160
+
+        R = p / (beta * H)
+
+161
+
+        temp = dot(P[state, :], dot(Sb - Sc, x_vals).T).flatten()
+
+162
+
+        adj = p[1:] / temp[:T-1]
+
+163
+
+    else:
+
+164
+
+        H = dot(Sl.T, Sl) - dot((Sb - Sc).T, Sl - Sg)
+
+165
+
+        L = np.empty(T)
+
+166
+
+        for t in range(T):
+
+167
+
+            L[t] = var_quadratic_sum(A, C, H, beta, x[:, t])
+
+168
+
+        B = L / p
+
+169
+
+        Rinv = (beta * dot(dot(Sb - Sc, A), x)).flatten() / p
+
+170
+
+        R = 1 / Rinv
+
+171
+
+        AF1 = dot(Sb - Sc, x[:, 1:])
+
+172
+
+        AF2 = dot(dot(Sb - Sc, A), x[:, :T-1])
+
+173
+
+        adj = AF1 / AF2
+
+174
+
+        adj = adj.flatten()
+
+175
+
+​
+
+176
+
+    Rf1 = B[1:] - R[:T-1] * B[:T-1] - rvn[:T-1] + g[:T-1]
+
+177
+
+    Radj = cumsum(Rf1 * adj)
+
+178
+
+​
+
+179
+
+    # == Prepare return values == #
+
+180
+
+    path = Path(g=g,
+
+181
+
+                d=d,
+
+182
+
+                b=b,
+
+183
+
+                s=s,
+
+184
+
+                c=c,
+
+185
+
+                l=l,
+
+186
+
+                p=p,
+
+187
+
+                Tax=Tax,
+
+188
+
+                rvn=rvn,
+
+189
+
+                B=B,
+
+190
+
+                R=R,
+
+191
+
+                Rf1=Rf1,
+
+192
+
+                Radj=Radj,
+
+193
+
+                adj=adj)
+
+194
+
+​
+
+195
+
+    return path
+
+196
+
+​
+
+197
+
+​
+
+198
+
+def gen_fig_1(path):
+
+199
+
+    """
+
+200
+
+    The parameter is the path namedtuple returned by compute_paths().  See
+
+201
+
+    the docstring of that function for details.
+
+202
+
+    """
+
+203
+
+​
+
+204
+
+    T = len(path.c)
+
+205
+
+​
+
+206
+
+    # == Prepare axes == #
+
+207
+
+    num_rows, num_cols = 2, 2
+
+208
+
+    fig, axes = plt.subplots(num_rows, num_cols, figsize=(14, 10))
+
+209
+
+    plt.subplots_adjust(hspace=0.4)
+
+210
+
+    for i in range(num_rows):
+
+211
+
+        for j in range(num_cols):
+
+212
+
+            axes[i, j].grid()
+
+213
+
+            axes[i, j].set_xlabel(r'Time')
+
+214
+
+    bbox = (0., 1.02, 1., .102)
+
+215
+
+    legend_args = {'bbox_to_anchor': bbox, 'loc': 3, 'mode': 'expand'}
+
+216
+
+    p_args = {'lw': 2, 'alpha': 0.7}
+
+217
+
+​
+
+218
+
+    # == Plot consumption, govt expenditure and revenue == #
+
+219
+
+    ax = axes[0, 0]
+
+220
+
+    ax.plot(path.rvn, label=r'$\tau_t \ell_t$', **p_args)
+
+221
+
+    ax.plot(path.g, label=r'$g_t$', **p_args)
+
+222
+
+    ax.plot(path.c, label=r'$c_t$', **p_args)
+
+223
+
+    ax.legend(ncol=3, **legend_args)
+
+224
+
+​
+
+225
+
+    # == Plot govt expenditure and debt == #
+
+226
+
+    ax = axes[0, 1]
+
+227
+
+    ax.plot(list(range(1, T+1)), path.rvn, label=r'$\tau_t \ell_t$', **p_args)
+
+228
+
+    ax.plot(list(range(1, T+1)), path.g, label=r'$g_t$', **p_args)
+
+229
+
+    ax.plot(list(range(1, T)), path.B[1:T], label=r'$B_{t+1}$', **p_args)
+
+230
+
+    ax.legend(ncol=3, **legend_args)
+
+231
+
+​
+
+232
+
+    # == Plot risk free return == #
+
+233
+
+    ax = axes[1, 0]
+
+234
+
+    ax.plot(list(range(1, T+1)), path.R - 1, label=r'$R_t - 1$', **p_args)
+
+235
+
+    ax.legend(ncol=1, **legend_args)
+
+236
+
+​
+
+237
+
+    # == Plot revenue, expenditure and risk free rate == #
+
+238
+
+    ax = axes[1, 1]
+
+239
+
+    ax.plot(list(range(1, T+1)), path.rvn, label=r'$\tau_t \ell_t$', **p_args)
+
+240
+
+    ax.plot(list(range(1, T+1)), path.g, label=r'$g_t$', **p_args)
+
+241
+
+    axes[1, 1].plot(list(range(1, T)), path.Rf1, label=r'$\pi_{t+1}$', **p_args)
+
+242
+
+    ax.legend(ncol=3, **legend_args)
+
+243
+
+​
+
+244
+
+    plt.show()
+
+245
+
+​
+
+246
+
+​
+
+247
+
+def gen_fig_2(path):
+
+248
+
+    """
+
+249
+
+    The parameter is the path namedtuple returned by compute_paths().  See
+
+250
+
+    the docstring of that function for details.
+
+251
+
+    """
+
+252
+
+​
+
+253
+
+    T = len(path.c)
+
+254
+
+​
+
+255
+
+    # == Prepare axes == #
+
+256
+
+    num_rows, num_cols = 2, 1
+
+257
+
+    fig, axes = plt.subplots(num_rows, num_cols, figsize=(10, 10))
+
+258
+
+    plt.subplots_adjust(hspace=0.5)
+
+259
+
+    bbox = (0., 1.02, 1., .102)
+
+260
+
+    bbox = (0., 1.02, 1., .102)
+
+261
+
+    legend_args = {'bbox_to_anchor': bbox, 'loc': 3, 'mode': 'expand'}
+
+262
+
+    p_args = {'lw': 2, 'alpha': 0.7}
+
+263
+
+​
+
+264
+
+    # == Plot adjustment factor == #
+
+265
+
+    ax = axes[0]
+
+266
+
+    ax.plot(list(range(2, T+1)), path.adj, label=r'$\xi_t$', **p_args)
+
+267
+
+    ax.grid()
+
+268
+
+    ax.set_xlabel(r'Time')
+
+269
+
+    ax.legend(ncol=1, **legend_args)
+
+270
+
+​
+
+271
+
+    # == Plot adjusted cumulative return == #
+
+272
+
+    ax = axes[1]
+
+273
+
+    ax.plot(list(range(2, T+1)), path.Radj, label=r'$\Pi_t$', **p_args)
+
+274
+
+    ax.grid()
+
+275
+
+    ax.set_xlabel(r'Time')
+
+276
+
+    ax.legend(ncol=1, **legend_args)
+
+277
+
+​
+
+278
+
+    plt.show()
+
+279
+
+​
+
+280
+
+import numpy as np
+
+281
+
+from numpy import array
+
+282
+
+beta= 1 / 1.05
+
+283
+
+rho, mg = .7, .35
+
+284
+
+A = np.identity(2)
+
+285
+
+A[0, :] = rho, mg * (1-rho)
+
+286
+
+C = np.zeros((2, 1))
+
+287
+
+C[0,0] = np.sqrt(1 - rho**2) * mg / 10.
+
+288
+
+Sg = array((1, 0)).reshape(1, 2)
+
+289
+
+Sd = array((0, 0)).reshape(1, 2)
+
+290
+
+Sb = array((0, 2.135)).reshape(1, 2)
+
+291
+
+Ss = array((0, 0)).reshape(1, 2)
+
+292
+
+economy = Economy(beta=beta,Sg=Sg,Sd=Sd,Sb=Sb,Ss=Ss,discrete=False, proc=(A, C))
+
+293
+
+T = 50
+
+294
+
+path = compute_paths(T, economy)
+
+295
+
+gen_fig_1(path)
+
+. . .
+Close <#>Expand <#>Open in Pager <#>Close <#>

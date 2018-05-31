@@ -1,0 +1,37 @@
+
+"
+  Name     : c8_02_cluster.R
+  Book     : Hands-on Data Science with Anaconda )
+  Publisher: Packt Publishing Ltd. 
+  Author   : Yuxing Yan and James Yan
+  Date     : 3/25/2018
+  email    : yany@canisius.edu
+             paulyxy@hotmail.com
+"
+
+## generate 500 objects, divided into 2 clusters.
+
+
+library(cluster)
+set.seed(123)
+n1<-200; mean1<-0; std1<-8
+n2<-300; mean2<-80; std2<-8
+set1<-cbind(rnorm(n1,mean1,std1), rnorm(n1,mean1,std1))
+set2<-cbind(rnorm(n2,mean2,std2), rnorm(n2,mean2,std2))
+x <- rbind(set1,set2)
+#
+data <- clara(x, 2, samples=50)
+plot(data)
+
+
+
+
+
+
+
+data <- clara(x, 2, samples=50)
+#data
+#data$clusinfo
+## using pamLike=TRUE  gives the same (apart from the 'call'):
+all.equal(data[-8],data(x, 2, samples=50, pamLike = TRUE)[-8])
+plot(data)

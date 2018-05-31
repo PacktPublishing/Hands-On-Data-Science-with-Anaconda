@@ -1,0 +1,6 @@
+library(AppliedPredictiveModeling)
+data(abalone)
+dim(abalone)
+head(abalone)
+
+
