@@ -27,4 +27,6 @@ plt.show()
 [Click here](https://docs.google.com/forms/d/e/1FAIpQLSe5qwunkGf6PUvzPirPDtuy1Du5Rlzew23UBp2S-P3wB-GcwQ/viewform) if you have any feedback or suggestions.
 
 ## Errata
-Chapter 3, page 52: ![alt text](https://github.com/PacktPublishing/Hands-On-Data-Science-with-Anaconda/blob/master/Errata_03_52.png)
+Chapter 3, page 52:
+
+![alt text](https://github.com/PacktPublishing/Hands-On-Data-Science-with-Anaconda/blob/master/Errata_03_52.png)
